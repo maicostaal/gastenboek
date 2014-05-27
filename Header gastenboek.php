@@ -28,5 +28,6 @@ function ubb($string) {
 
     return $string;
 }
-// test
+
+// Hallo ik heet maico
 ?>
