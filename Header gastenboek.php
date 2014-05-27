@@ -28,6 +28,11 @@ function ubb($string) {
 
     return $string;
 }
-
-// Hallo ik heet maico
 ?>
+
+<!-- Begin HTML -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Gastenboek - Gemaakt door Maico</title>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
