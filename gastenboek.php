@@ -83,9 +83,23 @@ input:focus, textarea:focus{
 <div style="width:500px; margin:0 auto;">
 <h1 style="text-align:center;">Gastenboek</h1>
 
-
-
-
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Als er een veld niet ingevuld is
+        if (empty($_POST['naam']) || empty($_POST['bericht'])) {
+            echo '<span style="color:red; font-weight: bold">Je hebt niet alle velden ingevuld!</span>';
+        } elseif (strlen($_POST['naam']) > 16 || strlen($_POST['bericht']) > 500) {
+            echo '<span style="color:red; font-weight: bold">De ingevulde velden hebben te veel karakters (naam maximaal 16, bericht maximaal 500)</span>';
+        } else {
+            // Als alle velden ingevuld zijn wordt het bericht gefilterd toegevoegd
+            if (mysql_query("INSERT INTO gastenboek (naam, bericht, datum, ip) VALUES ('".trim(mysql_real_escape_string($_POST['naam']))."', '".trim(mysql_real_escape_string($_POST['bericht']))."', NOW(), '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."')")) {
+                echo '<span style="color:green; font-weight: bold"Je reactie is succesvol toegevoegd!</span>';
+            } else {
+                echo '<span style="color:green; font-weight: bold">Er is iets fout gegaan en je reactie is niet toegevoegd. Probeer het later opnieuw.</span>';
+            }
+        }
+    }
+    ?>
 
 <form method="post" action=""><p>
         <span class="label">Naam: (maximaal 16 karakters)</span><br />
@@ -97,17 +111,21 @@ input:focus, textarea:focus{
 <hr />
 <p>
 
-
-
-        <b>Naam:</b> Maico Staal<br />
-        <b>Datum:</b> 27-mei-2014<br />
-        <b>Bericht:</b><br />Testbericht<br /><br />
-
-        <b>Naam:</b> Maico Staal<br />
-        <b>Datum:</b> 27-mei-2014<br />
-        <b>Bericht:</b><br />Nog een Testbericht<br /><br />
-
-
+    <?php
+    // Gegevens ophalen uit de database en sorteren op id
+    $sql = mysql_query("SELECT * FROM gastenboek ORDER BY datum DESC");
+    if (mysql_num_rows($sql) == 0) {
+        // Als er nog geen reacties geplaatst zijn
+        echo 'We hebben nog geen reacties!';
+    } else {
+        while($data = mysql_fetch_assoc($sql)) {
+            // Als er wel reacties zijn geplaatst worden deze nu weergegeven
+            echo '<b>Naam:</b> '.htmlspecialchars(stripslashes($data['naam'])).'<br />
+        <b>Datum:</b> '.htmlspecialchars(stripslashes($data['datum'])).'<br />
+        <b>Bericht:</b><br />'.ubb($data['bericht']).'<br /><br />';
+        }
+    }
+    ?>
 
 </p>
 </div>
